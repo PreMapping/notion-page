@@ -1,16 +1,11 @@
 package com.mapping.notionpage.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class PageFindResponseDto {
 
     private long pageId;
@@ -30,5 +25,16 @@ public class PageFindResponseDto {
         this.content = content;
         this.subPages = new ArrayList<>(subPages);
         this.breadcrumbs = new ArrayList<>(breadcrumbs);
+    }
+
+    @Override
+    public String toString() {
+
+        return "{\n\tpageId : " + this.pageId +
+                ",\n\ttitle : " + this.title +
+                ",\n\tcontent : " + this.content +
+                ",\n\tsubPages : " + this.subPages.toString() +
+                ",\n\tbreadcrumbs : " + this.breadcrumbs.toString() +
+                "\n}";
     }
 }

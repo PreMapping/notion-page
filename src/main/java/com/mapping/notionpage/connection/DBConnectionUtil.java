@@ -11,18 +11,16 @@ import java.sql.SQLException;
 @Slf4j
 @Component
 public class DBConnectionUtil {
-    @Value("${spring.datasource.url}")
-    private String url;
-    @Value("${spring.datasource.username}")
-    private String username;
-    @Value("${spring.datasource.password}")
-    private String password;
 
-    public Connection getConnection() {
+    private static final String URL = "jdbc:mysql://localhost:3306/notionpage";
+    private static final String USERNAME = "board";
+    private static final String PASSWORD = "board1111";
+
+    public static Connection getConnection() {
         try {
-            Connection connection = DriverManager.getConnection(url,
-                    username,
-                    password);
+            Connection connection = DriverManager.getConnection(URL,
+                    USERNAME,
+                    PASSWORD);
 
             log.info("get connection = {}, class = {}", connection, connection.getClass());
             return connection;
