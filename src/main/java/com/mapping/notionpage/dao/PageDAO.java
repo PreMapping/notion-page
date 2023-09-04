@@ -38,7 +38,7 @@ public class PageDAO {
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     log.info("pageId={}", generatedKeys.getLong(1));
-                    return generatedKeys.getLong(1); // 생성된 페이지의 ID 반환
+                    return generatedKeys.getLong(1); // ID 반환
                 } else {
                     throw new RuntimeException("페이지 생성 실패, 생성된 ID를 가져올 수 없음");
                 }
@@ -49,7 +49,7 @@ public class PageDAO {
         }
     }
 
-    public PageDTO getPageInfo(long pageId) {
+    public PageDTO getPageInfo(Long pageId) {
         String selectPageSql = "SELECT title, content, top_node, parent_page_id FROM page WHERE id = ?";
 
         try (Connection connection = dbConnectionUtil.getConnection();
@@ -75,22 +75,22 @@ public class PageDAO {
         }
     }
 
-    public List<Long> getSubPages(long parentPageId) {
+    public List<Long> getSubPages(Long pageId) {
         String selectPageIdsSql = "SELECT id FROM page WHERE parent_page_id = ?";
 
         try (Connection connection = dbConnectionUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(selectPageIdsSql)) {
 
-            preparedStatement.setLong(1, parentPageId);
+            preparedStatement.setLong(1, pageId);
 
-            List<Long> pageIds = new ArrayList<>();
+            List<Long> pageIdList = new ArrayList<>();
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    pageIds.add(resultSet.getLong("id"));
+                    pageIdList.add(resultSet.getLong("id"));
                 }
             }
 
-            return pageIds;
+            return pageIdList;
         } catch (Exception e) {
             log.error("페이지 ID 목록 조회 실패", e);
             throw new RuntimeException(e);

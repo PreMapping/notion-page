@@ -31,11 +31,6 @@ public class NotionpageApplication {
 		testCreateAndRetrievePages();
 	}
 
-	@Bean
-	@Profile("test")
-	public void init() {
-		// 여기에서 테스트 데이터 초기화 또는 더미 데이터 생성 가능
-	}
 
 	public static void testCreateAndRetrievePages() {
 		PageService pageService = SpringApplication.run(NotionpageApplication.class).getBean(PageService.class);

@@ -36,7 +36,10 @@ public class PageService {
 
         List<Long> breadcrumbs = new ArrayList<>();
         breadcrumbs.add(topNode);
-        breadcrumbs.add(parentPageId);
+        breadcrumbs.add(findPageId);
+        if (!(parentPageId == 0)) {
+            breadcrumbs.add(parentPageId);
+        }
 
         RequestPageDTO requestPageDTO = new RequestPageDTO(findPageId, title, subPages, breadcrumbs);
         ObjectMapper objectMapper = new ObjectMapper();
