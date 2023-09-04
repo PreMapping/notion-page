@@ -2,12 +2,14 @@ package com.mapping.notionpage.service;
 
 import com.mapping.notionpage.repository.JdbcRepository;
 import com.mapping.notionpage.repository.dto.Page;
+import com.mapping.notionpage.repository.dto.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +26,11 @@ public class PageService {
     }
 
 
-    public Page getResult(Long request){
+    public PageResult getResult(Long request){
         JdbcRepository jdbcRepository=pageRepository();
+        //요청들어온 page 객체
+        Page requestObj=jdbcRepository.findByUserId(request).get();
+
         //  초기값 설정
         Object[][] input= {
                 {1,"1","test",1,0},
@@ -51,24 +56,26 @@ public class PageService {
 
         //같은 topNode  가진 원소들 확인
         List<Page> nodeList=jdbcRepository.findByUsersId(topNode).get();
-//        for (int i=0 ; i<nodeList.size();i++){
-//            System.out.println(nodeList.get(i).getId());
-//        }
+
         //서브페이지 리스트 구하기
         ArrayList<Long> subPages=getSubPages(request,nodeList);
-        subPages.add(request);
+
         //Bread Crumbs 구하기
         ArrayList<Long>emptyList=new ArrayList<>();
         ArrayList<Long> breadCrumbs=getBreadCrumbs(request,nodeList,topNode,emptyList);
-
+        Collections.reverse(breadCrumbs);
+        breadCrumbs.add(request);       // 마지막에 자기자신 추가
 
         System.out.println(subPages);
         System.out.println(breadCrumbs);
-        //jdbcRepository.findByUserId(1);
-        return jdbcRepository.findByUserId(request).get();
+
+        //결과 반환
+        PageResult pageResult=new PageResult(requestObj.getId(),requestObj.getTitle(),requestObj.getContent(),subPages,breadCrumbs);
+
+        return pageResult;
     }
 
-    public ArrayList<Long> getSubPages(Long request,List<Page> nodeList){
+    public ArrayList<Long> getSubPages(Long request,List<Page> nodeList){       //부모로 request가진 것들 추가
         ArrayList<Long> subPageArray=new ArrayList<>();
         for(int i=0;i<nodeList.size();i++){
             if(nodeList.get(i).getParentPageId().get()==request){
