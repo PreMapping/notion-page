@@ -29,7 +29,8 @@ public class PageService {
     public PageResult getResult(Long request){
         JdbcRepository jdbcRepository=pageRepository();
         //요청들어온 page 객체
-        Page requestObj=jdbcRepository.findByUserId(request).get();
+//        Page requestObj=jdbcRepository.findByUserId(request).get();
+        Page requestObj = jdbcRepository.findByUserId(request).orElseThrow();
 
         //  초기값 설정
         Object[][] input= {
