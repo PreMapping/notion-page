@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.jdbc.datasource.DataSourceUtils.getConnection;
@@ -86,6 +88,34 @@ public class JdbcRepository {
         }
         return Optional.empty();
     }
+    public Optional <List<Page>> findByUsersId(long topNode) {
+        String SQL = "SELECT id,title,content,top_node,parent_page_id FROM page WHERE top_node = (?)";
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            connection = getConnection(dataSource);
+            pstmt = connection.prepareStatement(SQL);
+            pstmt.setLong(1, topNode);
+            rs = pstmt.executeQuery();
 
+            List <Page> results=new ArrayList<>();
+            while(rs.next()){
+                Page page = new Page(rs.getLong("id"), rs.getString("title"), rs.getString("content"), rs.getLong("top_node"),Optional.ofNullable( rs.getLong("parent_page_id")));
+                page.setId(rs.getLong("id"));
+
+                results.add(page);
+                System.out.println(page);
+
+            }
+            return Optional.ofNullable( results);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            DbClose.close(connection,pstmt,rs,dataSource);
+        }
+        return Optional.empty();
+    }
 
 }

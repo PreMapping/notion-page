@@ -13,13 +13,23 @@ public class PageServiceTest {
     @Autowired
     private PageService pageService;
 
+//    @DisplayName("Db 저장 테스트")
+//    @Test
+//    void dbSaveTest() throws Exception{
+//        //given
+//
+//        //when
+//        Page page=pageService.getResult(5L);
+//        //then
+//        Assertions.assertThat(page.getId()).isEqualTo(1);
+//    }
     @DisplayName("Db 저장 테스트")
     @Test
     void dbSaveTest() throws Exception{
         //given
 
         //when
-        Page page=pageService.getResult(1);
+        Page page=pageService.getResult(5L);
         //then
         Assertions.assertThat(page.getId()).isEqualTo(1);
     }
