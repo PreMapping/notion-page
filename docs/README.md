@@ -4,13 +4,13 @@
 
 ```mermaid
 erDiagram
-    Page {
-        id BIGINT PK "NOT NULL, AUTO_INCREMENT"
-        title VARCHAR(255) "DEFAULT '제목없음'"
-        content TEXT
-        top_page_id BIGINT "NOT NULL"
-        parent_page_id BIGINT "NULL"
-    }
+   Page {
+      id BIGINT PK "NOT NULL, AUTO_INCREMENT"
+      title VARCHAR(255) "DEFAULT '제목없음'"
+      content TEXT
+      top_page_id BIGINT "NOT NULL"
+      parent_page_id BIGINT "NULL"
+   }
 ```
 
 - id : 고유 식별자
@@ -58,27 +58,27 @@ insert 로직을 수행한다면 아래와 같이 데이터를 그래프화 할 
 
 ```mermaid
 flowchart TB
-    id1((pageId : 1))
-    id2((pageId : 2))
-    id3((pageId : 3))
-    id4((pageId : 4))
-    id5((pageId : 5))
-    id6((pageId : 6))
-    id7((pageId : 7))
-    id8((pageId : 8))
-    id9((pageId : 9))
-    id10((pageId : 10))
-    id11((pageId : 11))
-    id1 --- id2
-    id1 --- id3
-    id2 --- id4
-    id2 --- id5
-    id4 --- id6
-    id3 --- id7
-    id3 --- id8
-    id3 --- id9
-    id8 --- id10
-    id8 --- id11
+   id1((pageId : 1))
+   id2((pageId : 2))
+   id3((pageId : 3))
+   id4((pageId : 4))
+   id5((pageId : 5))
+   id6((pageId : 6))
+   id7((pageId : 7))
+   id8((pageId : 8))
+   id9((pageId : 9))
+   id10((pageId : 10))
+   id11((pageId : 11))
+   id1 --- id2
+   id1 --- id3
+   id2 --- id4
+   id2 --- id5
+   id4 --- id6
+   id3 --- id7
+   id3 --- id8
+   id3 --- id9
+   id8 --- id10
+   id8 --- id11
 ```
 
 #### 🚀 read
@@ -95,16 +95,15 @@ flowchart TB
 
 #### 🚀 `pageId : 8` 조회 예시
 
-1. `pageId : 8` 에 있는 top_page_id(최상위 노드)인 `pageId : 1` 이 `top_page_id` 인 데이터를 조회하여
+1. `pageId : 8` 에 있는 `top_page_id(최상위 노드)` 인 `pageId : 1` 을 기준으로 `top_page_id` 인 데이터를 조회하여
 2. `pageId : 1`, `pageId : 2`... `pageId : 11` 까지 데이터를 취득한다.
-3. `top_page_id` 와 `parent_page_id` 를 통해 그래프 구조를 만든다. (ex. 2차원 배열, 자료 구조 등)
-4. `parent_page_id` 는 양방향 간선으로 생각한다.
-5. `top_page_id` 를 시작으로 `pageId : 8` 까지 최단 방향을 찾는다.
-6. 최단 방향을 찾기 위해 그래프 탐색을 활용하여 `pageId : 1` -> `pageId : 3` -> `pageId : 8` 결과를 얻는다.
-7. `pageId : 8` 가 `parent_page_id` 인 데이터를 조회하여
-8. `pageId : 10`, `pageId : 11` 을 취득한다.
-9. `Breadcrumbs` 의 값은 [`pageId : 1`, `pageId : 3`, `pageId : 8`]
-10. `서브 페이지 리스트` 의 값은 [`pageId : 10`, `pageId : 11`]
+3. `pageId : 8` 을 시작으로 `top_page_id` 까지 `재귀 함수`를 통해 최단 방향을 찾는다.
+4. `pageId : 8` 의 부모 페이지인 `pageId : 3` 을 찾고 `Breadcrumbs` 에 추가한다.
+5. `pageId : 3` 의 부모 페이지인 `pageId : 1` 을 찾고 `Breadcrumbs` 에 추가한다.
+6. `pageId : 1` 의 부모 페이지가 없으므로 `재귀 함수`를 종료한다.
+7. 취득한 데이터에서 `pageId : 8` 가 `parent_page_id` 인 데이터를 조회하여 `서브 페이지 리스트` 에 추가한다.
+8. `Breadcrumbs` 의 값은 [`pageId : 1`, `pageId : 3`, `pageId : 8`]
+9. `서브 페이지 리스트` 의 값은 [`pageId : 10`, `pageId : 11`]
 
 ## 결과 정보
 
